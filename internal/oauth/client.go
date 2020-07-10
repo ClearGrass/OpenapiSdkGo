@@ -25,10 +25,6 @@ type Client struct {
 	tokenStore sync.Map // 缓存token
 }
 
-const (
-	authTokenKey = "authToken"
-)
-
 func (c *Client) GetToken() (*oauth2.Token, error) {
 	if token, exists := c.getTokenFromCache(); exists {
 		if token.Expiry.Unix()-time.Now().Unix() > 0 {
@@ -63,7 +59,7 @@ func (c *Client) generateToken() (*oauth2.Token, error) {
 		ClientID:     c.accessKey,
 		ClientSecret: c.secretKey,
 		TokenURL:     c.authPath,
-		Scopes:       []string{"device_full_access"},
+		Scopes:       []string{scopeDeviceManage},
 	}
 
 	return config.Token(context.Background())

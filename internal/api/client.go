@@ -62,6 +62,9 @@ func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 }
 
 func (c *Client) DeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error) {
+	if req.Timestamp == 0 {
+		req.Timestamp = time.Now().Unix()
+	}
 	if req.Limit != 0 {
 		return c.deviceData(ctx, req)
 	}
@@ -119,6 +122,10 @@ func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq
 }
 
 func (c *Client) DeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
+	if req.Timestamp == 0 {
+		req.Timestamp = time.Now().Unix()
+	}
+
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return nil, err

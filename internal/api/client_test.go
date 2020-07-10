@@ -38,7 +38,7 @@ func TestClient_DeviceData(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	filter := new(structs.QueryDeviceDataReq)
 	filter.Mac = "582D3446037B"
-	filter.StartTime = 1594010740
+	filter.StartTime = 1594266312
 	//filter.EndTime = 1594018760
 	filter.Timestamp = time.Now().Unix()
 	//filter.Limit = 5
