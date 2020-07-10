@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
@@ -20,8 +21,7 @@ func TestClient_DeviceList(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	res, err := client.DeviceList(context.Background())
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 
 	for _, device := range res.Devices {
@@ -39,13 +39,10 @@ func TestClient_DeviceData(t *testing.T) {
 	filter := new(structs.QueryDeviceDataReq)
 	filter.Mac = "582D3446037B"
 	filter.StartTime = 1594266312
-	//filter.EndTime = 1594018760
-	filter.Timestamp = time.Now().Unix()
 	//filter.Limit = 5
 	res, err := client.DeviceData(context.Background(), filter)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 
 	fmt.Printf("%+v\n", res.Total)
@@ -54,7 +51,14 @@ func TestClient_DeviceData(t *testing.T) {
 	for _, data := range res.Data {
 		t := time.Unix(int64(data.Timestamp.Value), 0)
 		fmt.Printf("%v\t", t.String())
-		fmt.Printf("%v\n", data.Temperature.Value)
+		fmt.Printf("%v\t", data.Temperature.Value)
+
+		// 空气检测仪具有co2
+		if data.Co2 != nil {
+			fmt.Printf("%v\t", data.Co2.Value)
+		}
+
+		fmt.Println()
 	}
 }
 
@@ -68,9 +72,43 @@ func TestClient_DeviceEvent(t *testing.T) {
 	filter.Limit = 5
 	res, err := client.DeviceEvent(context.Background(), filter)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 
 	fmt.Printf("%+v\n", res)
+}
+
+func TestClient_UpdateDeviceSettings(t *testing.T) {
+	client := NewClient(host, authPath, accessKey, secretKey)
+	settings := new(structs.UpdateDeviceSettingReq)
+	settings.Mac = []string{"582D3400569E"}
+	settings.ReportInterval = 120
+	settings.CollectInterval = 60
+
+	if err := client.UpdateDeviceSettings(context.Background(), settings); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func TestClient_BindDevice(t *testing.T) {
+	client := NewClient(host, authPath, accessKey, secretKey)
+	req := new(structs.BindDeviceReq)
+	req.DeviceToken = "1513"
+	req.ProductId = 1201
+	res, err := client.BindDevice(context.Background(), req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%+v\t", res.Info.Mac)
+	fmt.Printf("%+v\t", res.Info.Product)
+}
+
+func TestClient_DeleteDevice(t *testing.T) {
+	client := NewClient(host, authPath, accessKey, secretKey)
+	req := new(structs.DeleteDeviceReq)
+	req.Mac = []string{"582D344C046C"}
+	if err := client.DeleteDevice(context.Background(), req); err != nil {
+		log.Fatal(err)
+	}
 }

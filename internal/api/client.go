@@ -28,15 +28,66 @@ type Client struct {
 	authClient *oauth.Client
 }
 
-func (c *Client) CreateDevice(ctx context.Context) error {
+func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*structs.Device, error) {
+	token, err := c.authClient.GetToken()
+	if err != nil {
+		return nil, err
+	}
+
+	device := new(structs.Device)
+	uri := c.host + deviceBindPath
+	header := make(map[string]string)
+	header["Authorization"] = BearerTokenPrefix + token.AccessToken
+	if err := gout.POST(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(device).Do(); err != nil {
+		return nil, err
+	}
+
+	if device.Msg != "" {
+		return nil, errors.New(device.Msg)
+	}
+
+	return device, err
+}
+
+func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq) error {
+	token, err := c.authClient.GetToken()
+	if err != nil {
+		return err
+	}
+
+	device := new(structs.Device)
+	uri := c.host + deviceDeletePath
+	header := make(map[string]string)
+	header["Authorization"] = BearerTokenPrefix + token.AccessToken
+	if err := gout.DELETE(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(device).Do(); err != nil {
+		return err
+	}
+
+	if device.Msg != "" {
+		return errors.New(device.Msg)
+	}
+
 	return nil
 }
 
-func (c *Client) DeleteDevice(ctx context.Context) error {
-	return nil
-}
+func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDeviceSettingReq) error {
+	token, err := c.authClient.GetToken()
+	if err != nil {
+		return err
+	}
 
-func (c *Client) UpdateDeviceSettings(ctx context.Context) error {
+	res := new(structs.DeviceList)
+	uri := c.host + deviceUpdateSettingPath
+	header := make(map[string]string)
+	header["Authorization"] = BearerTokenPrefix + token.AccessToken
+	if err := gout.PUT(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(res).Do(); err != nil {
+		return err
+	}
+
+	if res.Msg != "" {
+		errors.New(res.Msg)
+	}
+
 	return nil
 }
 

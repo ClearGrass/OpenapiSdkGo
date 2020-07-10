@@ -30,6 +30,7 @@ type MetricData struct {
 }
 
 type Device struct {
+	Msg  string      `json:"msg"`
 	Info *DeviceInfo `json:"info"`
 	Data *DeviceData `json:"data"`
 }
