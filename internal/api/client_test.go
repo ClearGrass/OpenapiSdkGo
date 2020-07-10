@@ -93,7 +93,7 @@ func TestClient_UpdateDeviceSettings(t *testing.T) {
 func TestClient_BindDevice(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	req := new(structs.BindDeviceReq)
-	req.DeviceToken = "1513"
+	req.DeviceToken = "1015"
 	req.ProductId = 1201
 	res, err := client.BindDevice(context.Background(), req)
 	if err != nil {
@@ -101,13 +101,14 @@ func TestClient_BindDevice(t *testing.T) {
 	}
 
 	fmt.Printf("%+v\t", res.Info.Mac)
+	fmt.Printf("%+v\t", res.Info.Version)
 	fmt.Printf("%+v\t", res.Info.Product)
 }
 
 func TestClient_DeleteDevice(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	req := new(structs.DeleteDeviceReq)
-	req.Mac = []string{"582D344C046C"}
+	req.Mac = []string{"582D3400569E"}
 	if err := client.DeleteDevice(context.Background(), req); err != nil {
 		log.Fatal(err)
 	}
