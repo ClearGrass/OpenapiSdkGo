@@ -112,7 +112,7 @@ func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 	return deviceList, err
 }
 
-func (c *Client) DeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error) {
+func (c *Client) QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error) {
 	if req.Timestamp == 0 {
 		req.Timestamp = time.Now().Unix()
 	}
@@ -172,7 +172,7 @@ func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq
 	return deviceData, nil
 }
 
-func (c *Client) DeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
+func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
 	if req.Timestamp == 0 {
 		req.Timestamp = time.Now().Unix()
 	}

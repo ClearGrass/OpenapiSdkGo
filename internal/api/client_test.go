@@ -34,13 +34,13 @@ func TestClient_DeviceList(t *testing.T) {
 	}
 }
 
-func TestClient_DeviceData(t *testing.T) {
+func TestClient_QueryDeviceData(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	filter := new(structs.QueryDeviceDataReq)
 	filter.Mac = "582D3446037B"
-	filter.StartTime = 1594266312
+	filter.StartTime = time.Now().AddDate(0, 0, -1).Unix()
 	//filter.Limit = 5
-	res, err := client.DeviceData(context.Background(), filter)
+	res, err := client.QueryDeviceData(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,7 +62,7 @@ func TestClient_DeviceData(t *testing.T) {
 	}
 }
 
-func TestClient_DeviceEvent(t *testing.T) {
+func TestClient_QueryDeviceEvent(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	filter := new(structs.QueryDeviceDataReq)
 	filter.Mac = "582D3446037B"
@@ -70,7 +70,7 @@ func TestClient_DeviceEvent(t *testing.T) {
 	//filter.EndTime = 1594018760
 	filter.Timestamp = time.Now().Unix()
 	filter.Limit = 5
-	res, err := client.DeviceEvent(context.Background(), filter)
+	res, err := client.QueryDeviceEvent(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}

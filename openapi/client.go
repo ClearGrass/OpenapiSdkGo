@@ -12,8 +12,8 @@ type Client interface {
 	DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq) error
 	UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDeviceSettingReq) error // 仅支持空气检测仪
 	DeviceList(ctx context.Context) (*structs.DeviceList, error)
-	DeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error)
-	DeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error)
+	QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error)
+	QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error)
 }
 
 func NewClient(apiHost, authPath, accessKey, secretKey string) Client {
