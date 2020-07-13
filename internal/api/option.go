@@ -12,3 +12,7 @@ const (
 const (
 	BearerTokenPrefix = "Bearer "
 )
+
+const (
+	errorMsg = "openapi"
+)

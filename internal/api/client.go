@@ -2,12 +2,12 @@ package api
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/ClearGrass/OpenapiSdkGo/internal/oauth"
 	"github.com/ClearGrass/OpenapiSdkGo/structs"
 	"github.com/guonaihong/gout"
+	"github.com/pkg/errors"
 )
 
 func NewClient(apiHost, authPath, accessKey, secretKey string) *Client {
@@ -31,7 +31,7 @@ type Client struct {
 func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*structs.Device, error) {
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	device := new(structs.Device)
@@ -39,11 +39,11 @@ func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*s
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.POST(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(device).Do(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	if device.Msg != "" {
-		return nil, errors.New(device.Msg)
+		return nil, errors.Wrap(errors.New(device.Msg), errorMsg)
 	}
 
 	return device, err
@@ -52,7 +52,7 @@ func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*s
 func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq) error {
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return err
+		return errors.Wrap(err, errorMsg)
 	}
 
 	device := new(structs.Device)
@@ -60,11 +60,11 @@ func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq)
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.DELETE(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(device).Do(); err != nil {
-		return err
+		return errors.Wrap(err, errorMsg)
 	}
 
 	if device.Msg != "" {
-		return errors.New(device.Msg)
+		return errors.Wrap(errors.New(device.Msg), errorMsg)
 	}
 
 	return nil
@@ -73,7 +73,7 @@ func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq)
 func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDeviceSettingReq) error {
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return err
+		return errors.Wrap(err, errorMsg)
 	}
 
 	res := new(structs.DeviceList)
@@ -81,11 +81,11 @@ func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDe
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.PUT(uri).SetTimeout(3 * time.Second).SetHeader(header).SetJSON(req).BindJSON(res).Do(); err != nil {
-		return err
+		return errors.Wrap(err, errorMsg)
 	}
 
 	if res.Msg != "" {
-		errors.New(res.Msg)
+		return errors.Wrap(errors.New(res.Msg), errorMsg)
 	}
 
 	return nil
@@ -94,7 +94,7 @@ func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDe
 func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	deviceList := new(structs.DeviceList)
@@ -102,11 +102,11 @@ func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.GET(uri).SetTimeout(3 * time.Second).SetHeader(header).BindJSON(deviceList).Do(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	if deviceList.Msg != "" {
-		return nil, errors.New(deviceList.Msg)
+		return nil, errors.Wrap(errors.New(deviceList.Msg), errorMsg)
 	}
 
 	return deviceList, err
@@ -154,7 +154,7 @@ func (c *Client) QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDa
 func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error) {
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	deviceData := new(structs.DeviceDataListRes)
@@ -162,11 +162,11 @@ func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.GET(uri).SetTimeout(3 * time.Second).SetHeader(header).SetQuery(req).BindJSON(deviceData).Do(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	if deviceData.Msg != "" {
-		return nil, errors.New(deviceData.Msg)
+		return nil, errors.Wrap(errors.New(deviceData.Msg), errorMsg)
 	}
 
 	return deviceData, nil
@@ -179,7 +179,7 @@ func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceD
 
 	token, err := c.authClient.GetToken()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	deviceEvent := new(structs.DeviceEventListRes)
@@ -187,11 +187,11 @@ func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceD
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
 	if err := gout.GET(uri).SetTimeout(3 * time.Second).SetHeader(header).SetQuery(req).BindJSON(deviceEvent).Do(); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, errorMsg)
 	}
 
 	if deviceEvent.Msg != "" {
-		return nil, errors.New(deviceEvent.Msg)
+		return nil, errors.Wrap(errors.New(deviceEvent.Msg), errorMsg)
 	}
 
 	return deviceEvent, nil
