@@ -176,6 +176,45 @@ func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceD
 	if req.Timestamp == 0 {
 		req.Timestamp = time.Now().Unix()
 	}
+	if req.Limit != 0 {
+		return c.deviceEvent(ctx, req)
+	}
+
+	res := new(structs.DeviceEventListRes)
+	subRes, err := c.deviceEvent(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	total := subRes.Total
+	step := len(subRes.Events)
+	tag := step
+
+	if total == tag {
+		res = subRes
+	} else {
+		res.Events = make([]*structs.DeviceEvent, 0, total)
+		res.Total = subRes.Total
+		res.Events = append(res.Events, subRes.Events...)
+		for tag < total {
+			req.Limit = uint(step)
+			req.Offset = uint(tag)
+			subRes, err := c.deviceEvent(ctx, req)
+			if err != nil {
+				return nil, err
+			}
+			res.Events = append(res.Events, subRes.Events...)
+			tag += step
+		}
+	}
+
+	return res, nil
+}
+
+func (c *Client) deviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
+	if req.Timestamp == 0 {
+		req.Timestamp = time.Now().Unix()
+	}
 
 	token, err := c.authClient.GetToken()
 	if err != nil {

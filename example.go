@@ -10,11 +10,11 @@ import (
 )
 
 func main() {
-	apiHost := "http://api.test.cleargrass.com:9181"
-	authPath := "http://oauth.test.cleargrass.com/oauth2/token"
-	accessKey := "8XL4IBGGR"
-	secretKey := "b34bc5bfbf5611eabd0200163e2c48b3"
-	client := openapi.NewClient(apiHost, authPath, accessKey, secretKey) // 建议调用方将client设置为单例
+	apiHost := "apiHost"
+	authPath := "authPath"
+	appId := "YouAppId"
+	appSecret := "YouAppSecret"
+	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
 
 	// 设备列表
 	res, err := client.DeviceList(context.Background())
@@ -31,7 +31,12 @@ func main() {
 	if len(res.Devices) > 0 {
 		mac := res.Devices[0].Info.Mac
 		startTime := time.Now().AddDate(0, 0, -1).Unix()
-		filter := &structs.QueryDeviceDataReq{Mac: mac, StartTime: startTime}
+		filter := new(structs.QueryDeviceDataReq)
+		filter.Mac = mac
+		filter.StartTime = startTime // 开始时间
+		//filter.EndTime = time.Now().Unix() // 结束时间 默认为当前时间
+		//filter.Limit = 100                 // 用于分页 最大值为100,不填获取该时间段全部数据无上限
+		//filter.Offset = 0                  // 偏移量 用于分页查询默认值0
 		data, err := client.QueryDeviceData(context.Background(), filter)
 		if err != nil {
 			panic(err)

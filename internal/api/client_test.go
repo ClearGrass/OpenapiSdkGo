@@ -69,7 +69,7 @@ func TestClient_QueryDeviceEvent(t *testing.T) {
 	filter.StartTime = 1594010740
 	//filter.EndTime = 1594018760
 	filter.Timestamp = time.Now().Unix()
-	filter.Limit = 5
+	//filter.Limit = 5
 	res, err := client.QueryDeviceEvent(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
