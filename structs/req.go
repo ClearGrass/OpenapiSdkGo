@@ -1,5 +1,11 @@
 package structs
 
+type QueryDeviceListReq struct {
+	Offset    uint  `query:"offset"`
+	Limit     uint  `query:"limit"`
+	Timestamp int64 `query:"timestamp"`
+}
+
 type QueryDeviceDataReq struct {
 	Mac       string `form:"mac" query:"mac"`
 	StartTime int64  `form:"start_time" query:"start_time"`

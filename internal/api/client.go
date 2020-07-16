@@ -29,6 +29,10 @@ type Client struct {
 }
 
 func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*structs.Device, error) {
+	if req == nil {
+		return nil, errors.Wrap(errors.New("req is nil"), errorMsg)
+	}
+
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return nil, errors.Wrap(err, errorMsg)
@@ -50,6 +54,10 @@ func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*s
 }
 
 func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq) error {
+	if req == nil {
+		return errors.Wrap(errors.New("req is nil"), errorMsg)
+	}
+
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return errors.Wrap(err, errorMsg)
@@ -71,6 +79,10 @@ func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq)
 }
 
 func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDeviceSettingReq) error {
+	if req == nil {
+		return errors.Wrap(errors.New("req is nil"), errorMsg)
+	}
+
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return errors.Wrap(err, errorMsg)
@@ -91,7 +103,50 @@ func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDe
 	return nil
 }
 
-func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
+func (c *Client) DeviceList(ctx context.Context, req *structs.QueryDeviceListReq) (*structs.DeviceList, error) {
+	if req == nil {
+		req = new(structs.QueryDeviceListReq)
+	}
+
+	if req.Timestamp == 0 {
+		req.Timestamp = time.Now().Unix()
+	}
+	if req.Limit != 0 {
+		return c.deviceList(ctx, req)
+	}
+
+	res := new(structs.DeviceList)
+	subRes, err := c.deviceList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	total := subRes.Total
+	step := len(subRes.Devices)
+	tag := step
+
+	if total == tag {
+		res = subRes
+	} else {
+		res.Devices = make([]*structs.Device, 0, total)
+		res.Total = subRes.Total
+		res.Devices = append(res.Devices, subRes.Devices...)
+		for tag < total {
+			req.Limit = uint(step)
+			req.Offset = uint(tag)
+			subRes, err := c.deviceList(ctx, req)
+			if err != nil {
+				return nil, err
+			}
+			res.Devices = append(res.Devices, subRes.Devices...)
+			tag += step
+		}
+	}
+
+	return res, nil
+}
+
+func (c *Client) deviceList(ctx context.Context, req *structs.QueryDeviceListReq) (*structs.DeviceList, error) {
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return nil, errors.Wrap(err, errorMsg)
@@ -101,7 +156,7 @@ func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 	uri := c.host + deviceListPath
 	header := make(map[string]string)
 	header["Authorization"] = BearerTokenPrefix + token.AccessToken
-	if err := gout.GET(uri).SetTimeout(3 * time.Second).SetHeader(header).BindJSON(deviceList).Do(); err != nil {
+	if err := gout.GET(uri).SetTimeout(3 * time.Second).SetHeader(header).SetQuery(req).BindJSON(deviceList).Do(); err != nil {
 		return nil, errors.Wrap(err, errorMsg)
 	}
 
@@ -113,6 +168,9 @@ func (c *Client) DeviceList(ctx context.Context) (*structs.DeviceList, error) {
 }
 
 func (c *Client) QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error) {
+	if req == nil {
+		req = new(structs.QueryDeviceDataReq)
+	}
 	if req.Timestamp == 0 {
 		req.Timestamp = time.Now().Unix()
 	}
@@ -173,6 +231,9 @@ func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq
 }
 
 func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
+	if req == nil {
+		req = new(structs.QueryDeviceDataReq)
+	}
 	if req.Timestamp == 0 {
 		req.Timestamp = time.Now().Unix()
 	}

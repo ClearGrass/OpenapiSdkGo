@@ -14,14 +14,16 @@ type DeviceInfo struct {
 }
 
 type DeviceData struct {
-	Timestamp   *MetricData `json:"timestamp,omitempty"`
-	Battery     *MetricData `json:"battery,omitempty"`
-	Temperature *MetricData `json:"temperature,omitempty"`
-	Humidity    *MetricData `json:"humidity,omitempty"`
-	Pressure    *MetricData `json:"pressure,omitempty"`
-	Tvoc        *MetricData `json:"tvoc,omitempty"`
-	Co2         *MetricData `json:"co2,omitempty"`
-	Pm25        *MetricData `json:"pm25,omitempty"`
+	Timestamp       *MetricData `json:"timestamp,omitempty"`
+	Battery         *MetricData `json:"battery,omitempty"`
+	Signal          *MetricData `json:"signal,omitempty"`
+	Temperature     *MetricData `json:"temperature,omitempty"`
+	ProbTemperature *MetricData `json:"prob_temperature,omitempty"`
+	Humidity        *MetricData `json:"humidity,omitempty"`
+	Pressure        *MetricData `json:"pressure,omitempty"`
+	Tvoc            *MetricData `json:"tvoc,omitempty"`
+	Co2             *MetricData `json:"co2,omitempty"`
+	Pm25            *MetricData `json:"pm25,omitempty"`
 }
 
 type MetricData struct {

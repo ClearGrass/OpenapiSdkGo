@@ -17,7 +17,7 @@ func main() {
 	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
 
 	// 设备列表
-	res, err := client.DeviceList(context.Background())
+	res, err := client.DeviceList(context.Background(), &structs.QueryDeviceListReq{})
 	if err != nil {
 		panic(err)
 	}
@@ -35,13 +35,12 @@ func main() {
 		filter.Mac = mac
 		filter.StartTime = startTime // 开始时间
 		//filter.EndTime = time.Now().Unix() // 结束时间 默认为当前时间
-		//filter.Limit = 100                 // 用于分页 最大值为100,不填获取该时间段全部数据无上限
-		//filter.Offset = 0                  // 偏移量 用于分页查询默认值0
+		//filter.Limit = 100                 // 用于分页 最大值为100,不填获取该时间段全部数据
+		//filter.Offset = 0                  // 偏移量 用于分页查询 默认值0
 		data, err := client.QueryDeviceData(context.Background(), filter)
 		if err != nil {
 			panic(err)
 		}
-
 		fmt.Println(data.Total)
 	}
 }
