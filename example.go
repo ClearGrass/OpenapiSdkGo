@@ -17,7 +17,7 @@ func main() {
 	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
 
 	// 设备列表
-	res, err := client.DeviceList(context.Background(), &structs.QueryDeviceListReq{})
+	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{})
 	if err != nil {
 		panic(err)
 	}

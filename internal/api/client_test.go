@@ -17,9 +17,9 @@ var (
 	secretKey = "f4cfd224b43d11ea8bf400163e2c48b3"
 )
 
-func TestClient_DeviceList(t *testing.T) {
+func TestClient_QueryDeviceList(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
-	res, err := client.DeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 2, Offset: 0})
+	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 2, Offset: 0})
 	if err != nil {
 		log.Fatal(err)
 	}

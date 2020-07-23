@@ -103,7 +103,7 @@ func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDe
 	return nil
 }
 
-func (c *Client) DeviceList(ctx context.Context, req *structs.QueryDeviceListReq) (*structs.DeviceList, error) {
+func (c *Client) QueryDeviceList(ctx context.Context, req *structs.QueryDeviceListReq) (*structs.DeviceList, error) {
 	if req == nil {
 		req = new(structs.QueryDeviceListReq)
 	}
