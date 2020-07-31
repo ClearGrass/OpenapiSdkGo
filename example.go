@@ -34,6 +34,8 @@ func main() {
 		filter := new(structs.QueryDeviceDataReq)
 		filter.Mac = mac
 		filter.StartTime = startTime // 开始时间
+
+		//filter.Timestamp = time.Now().UnixNano() / 1000000 // 默然当前毫秒级时间戳
 		//filter.EndTime = time.Now().Unix() // 结束时间 默认为当前时间
 		//filter.Limit = 100                 // 用于分页 最大值为100,不填获取该时间段全部数据
 		//filter.Offset = 0                  // 偏移量 用于分页查询 默认值0

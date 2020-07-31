@@ -38,6 +38,7 @@ func (c *Client) BindDevice(ctx context.Context, req *structs.BindDeviceReq) (*s
 		return nil, errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	device := new(structs.Device)
 	uri := c.host + deviceBindPath
 	header := make(map[string]string)
@@ -63,6 +64,7 @@ func (c *Client) DeleteDevice(ctx context.Context, req *structs.DeleteDeviceReq)
 		return errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	device := new(structs.Device)
 	uri := c.host + deviceDeletePath
 	header := make(map[string]string)
@@ -88,6 +90,7 @@ func (c *Client) UpdateDeviceSettings(ctx context.Context, req *structs.UpdateDe
 		return errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	res := new(structs.DeviceList)
 	uri := c.host + deviceUpdateSettingPath
 	header := make(map[string]string)
@@ -108,9 +111,6 @@ func (c *Client) QueryDeviceList(ctx context.Context, req *structs.QueryDeviceLi
 		req = new(structs.QueryDeviceListReq)
 	}
 
-	if req.Timestamp == 0 {
-		req.Timestamp = time.Now().Unix()
-	}
 	if req.Limit != 0 {
 		return c.deviceList(ctx, req)
 	}
@@ -152,6 +152,7 @@ func (c *Client) deviceList(ctx context.Context, req *structs.QueryDeviceListReq
 		return nil, errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	deviceList := new(structs.DeviceList)
 	uri := c.host + deviceListPath
 	header := make(map[string]string)
@@ -171,9 +172,7 @@ func (c *Client) QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDa
 	if req == nil {
 		req = new(structs.QueryDeviceDataReq)
 	}
-	if req.Timestamp == 0 {
-		req.Timestamp = time.Now().Unix()
-	}
+
 	if req.Limit != 0 {
 		return c.deviceData(ctx, req)
 	}
@@ -215,6 +214,7 @@ func (c *Client) deviceData(ctx context.Context, req *structs.QueryDeviceDataReq
 		return nil, errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	deviceData := new(structs.DeviceDataListRes)
 	uri := c.host + deviceDataPath
 	header := make(map[string]string)
@@ -273,15 +273,12 @@ func (c *Client) QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceD
 }
 
 func (c *Client) deviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error) {
-	if req.Timestamp == 0 {
-		req.Timestamp = time.Now().Unix()
-	}
-
 	token, err := c.authClient.GetToken()
 	if err != nil {
 		return nil, errors.Wrap(err, errorMsg)
 	}
 
+	req.Timestamp = time.Now().UnixNano() / 1000000
 	deviceEvent := new(structs.DeviceEventListRes)
 	uri := c.host + deviceEventPath
 	header := make(map[string]string)

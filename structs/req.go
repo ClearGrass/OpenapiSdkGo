@@ -19,13 +19,16 @@ type UpdateDeviceSettingReq struct {
 	Mac             []string `json:"mac"`              // 设备mac地址
 	ReportInterval  int64    `json:"report_interval"`  // 秒
 	CollectInterval int64    `json:"collect_interval"` // 秒
+	Timestamp       int64    `json:"timestamp"`        // 毫秒
 }
 
 type BindDeviceReq struct {
 	ProductId   int    `json:"product_id" binding:"required"`
 	DeviceToken string `json:"device_token" binding:"required"`
+	Timestamp   int64  `json:"timestamp" binding:"required"`
 }
 
 type DeleteDeviceReq struct {
-	Mac []string `json:"mac"`
+	Mac       []string `json:"mac"`
+	Timestamp int64    `json:"timestamp"`
 }

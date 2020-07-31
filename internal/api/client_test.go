@@ -19,7 +19,7 @@ var (
 
 func TestClient_QueryDeviceList(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
-	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 2, Offset: 0})
+	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 0, Offset: 0})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestClient_QueryDeviceData(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	filter := new(structs.QueryDeviceDataReq)
 	filter.Mac = "582D344605B3"
-	filter.StartTime = time.Now().AddDate(0, 0, -1).Unix()
+	filter.StartTime = time.Now().AddDate(0, 0, -3).Unix()
 	//filter.Limit = 5
 	res, err := client.QueryDeviceData(context.Background(), filter)
 	if err != nil {
@@ -97,7 +97,6 @@ func TestClient_QueryDeviceEvent(t *testing.T) {
 	filter.Mac = "582D344605B3"
 	filter.StartTime = 1594010740
 	//filter.EndTime = 1594018760
-	filter.Timestamp = time.Now().Unix()
 	//filter.Limit = 5
 	res, err := client.QueryDeviceEvent(context.Background(), filter)
 	if err != nil {
@@ -124,7 +123,7 @@ func TestClient_UpdateDeviceSettings(t *testing.T) {
 func TestClient_BindDevice(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey)
 	req := new(structs.BindDeviceReq)
-	req.DeviceToken = "2239"
+	req.DeviceToken = "8995"
 	req.ProductId = 1201
 	res, err := client.BindDevice(context.Background(), req)
 	if err != nil {
