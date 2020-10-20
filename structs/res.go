@@ -1,16 +1,20 @@
 package structs
 
 type ProductInfo struct {
-	Id   int    `json:"id"`
-	Desc string `json:"desc"`
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	EnName string `json:"en_name"`
 }
 
 type DeviceInfo struct {
-	Mac       string       `json:"mac"`
-	Product   *ProductInfo `json:"product"`
-	Name      string       `json:"name"`
-	Version   string       `json:"version"`
-	CreatedAt int64        `json:"created_at"`
+	Mac       string          `json:"mac"`
+	Product   *ProductInfo    `json:"product"`
+	Name      string          `json:"name"`
+	Version   string          `json:"version"`
+	CreatedAt int64           `json:"created_at"`
+	GroupId   int64           `json:"group_id"`
+	GroupName string          `json:"group_name"`
+	Status    map[string]bool `json:"status"`
 }
 
 type DeviceData struct {

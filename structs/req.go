@@ -4,6 +4,7 @@ type QueryDeviceListReq struct {
 	Offset    uint  `query:"offset"`
 	Limit     uint  `query:"limit"`
 	Timestamp int64 `query:"timestamp"`
+	GroupId   int   `query:"group_id"`
 }
 
 type QueryDeviceDataReq struct {
