@@ -10,11 +10,12 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-func NewClient(authPath, accessKey, secretKey string) *Client {
+func NewClient(authPath, accessKey, secretKey string, useAgent bool) *Client {
 	client := new(Client)
 	client.authPath = authPath
 	client.accessKey = accessKey
 	client.secretKey = secretKey
+	client.useAgent = useAgent
 	return client
 }
 
@@ -22,6 +23,7 @@ type Client struct {
 	authPath   string
 	accessKey  string
 	secretKey  string
+	useAgent   bool
 	tokenStore sync.Map // 缓存token
 }
 
@@ -55,11 +57,15 @@ func (c *Client) storeTokenInCache(token *oauth2.Token) {
 }
 
 func (c *Client) generateToken() (*oauth2.Token, error) {
+	scope := []string{scopeDeviceManage}
+	if c.useAgent {
+		scope = []string{scopeDeviceManage, scopeAgentManage}
+	}
 	config := clientcredentials.Config{
 		ClientID:     c.accessKey,
 		ClientSecret: c.secretKey,
 		TokenURL:     c.authPath,
-		Scopes:       []string{scopeDeviceManage},
+		Scopes:       scope,
 	}
 
 	return config.Token(context.Background())

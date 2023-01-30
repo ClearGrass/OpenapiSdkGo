@@ -15,6 +15,10 @@ type DeviceInfo struct {
 	GroupId   int64           `json:"group_id"`
 	GroupName string          `json:"group_name"`
 	Status    map[string]bool `json:"status"`
+	Setting   struct {
+		ReportInterval  int64 `json:"report_interval,omitempty"`  // 秒
+		CollectInterval int64 `json:"collect_interval,omitempty"` // 秒
+	} `json:"setting"`
 }
 
 type DeviceData struct {
@@ -28,6 +32,7 @@ type DeviceData struct {
 	Tvoc            *MetricData `json:"tvoc,omitempty"`
 	Co2             *MetricData `json:"co2,omitempty"`
 	Pm25            *MetricData `json:"pm25,omitempty"`
+	Pm10            *MetricData `json:"pm10,omitempty"`
 }
 
 type MetricData struct {

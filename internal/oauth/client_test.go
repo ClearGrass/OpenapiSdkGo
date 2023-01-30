@@ -12,7 +12,7 @@ var (
 )
 
 func TestClient_GetToken(t *testing.T) {
-	client := NewClient(authPath, accessKey, secretKey)
+	client := NewClient(authPath, accessKey, secretKey, false)
 	for i := 0; i < 10; i++ {
 		token, err := client.GetToken()
 		if err != nil {

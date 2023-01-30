@@ -13,25 +13,25 @@ import (
 var (
 	host      = "http://api.test.cleargrass.com:9181"
 	authPath  = "http://oauth.test.cleargrass.com/oauth2/token"
-	accessKey = "GhTBXTZGg"
-	secretKey = "f4cfd224b43d11ea8bf400163e2c48b3"
+	accessKey = "C0twUosnR"
+	secretKey = "024cdeb3b00711ec801f00163e3260ae"
 )
 
 func TestClient_QueryDeviceList(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, false)
 	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 0, Offset: 0})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(res.Total)
-	fmt.Println(len(res.Devices))
+	fmt.Println("device total:", res.Total)
+	fmt.Println("device size:", len(res.Devices))
 
 	for _, device := range res.Devices {
 		if device.Info != nil {
 			fmt.Printf("%+v\t", device.Info)
 			fmt.Printf("%+v\t", device.Info.Status)
-			fmt.Printf("%+v\t", device.Info.Product)
+			fmt.Printf("%+v\t", device.Info.Product.EnName)
 			fmt.Println()
 		}
 
@@ -45,17 +45,14 @@ func TestClient_QueryDeviceList(t *testing.T) {
 			fmt.Println()
 		}
 	}
-
-	fmt.Println(res.Total)
-	fmt.Println(len(res.Devices))
 }
 
 func TestClient_QueryDeviceData(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, false)
 	filter := new(structs.QueryDeviceDataReq)
-	filter.Mac = "582D344611C8"
+	filter.Mac = "5448E68F452B"
 	//filter.StartTime = time.Now().AddDate(0, 0, -1).Unix()
-	filter.StartTime = time.Now().Add(-3 * time.Hour).Unix()
+	filter.StartTime = time.Now().Add(-2 * time.Hour).Unix()
 	//filter.Limit = 5
 	res, err := client.QueryDeviceData(context.Background(), filter)
 	if err != nil {
@@ -100,14 +97,18 @@ func TestClient_QueryDeviceData(t *testing.T) {
 			fmt.Printf("pm25:%v\t", data.Pm25.Value)
 		}
 
+		if data.Pm10 != nil {
+			fmt.Printf("pm10:%v\t", data.Pm10.Value)
+		}
+
 		fmt.Println()
 	}
 }
 
 func TestClient_QueryDeviceEvent(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, true)
 	filter := new(structs.QueryDeviceDataReq)
-	filter.Mac = "582D344605B3"
+	filter.Mac = "582D344627D3"
 	filter.StartTime = 1594010740
 	//filter.EndTime = 1594018760
 	//filter.Limit = 5
@@ -122,11 +123,11 @@ func TestClient_QueryDeviceEvent(t *testing.T) {
 }
 
 func TestClient_UpdateDeviceSettings(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, false)
 	settings := new(structs.UpdateDeviceSettingReq)
-	settings.Mac = []string{"582D3400569E"}
+	settings.Mac = []string{"582D34009112"}
 	settings.ReportInterval = 10
-	settings.CollectInterval = 5
+	settings.CollectInterval = 10
 
 	if err := client.UpdateDeviceSettings(context.Background(), settings); err != nil {
 		log.Fatal(err)
@@ -134,9 +135,9 @@ func TestClient_UpdateDeviceSettings(t *testing.T) {
 }
 
 func TestClient_BindDevice(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, true)
 	req := new(structs.BindDeviceReq)
-	req.DeviceToken = "3962"
+	req.DeviceToken = "123456"
 	req.ProductId = 1201
 	res, err := client.BindDevice(context.Background(), req)
 	if err != nil {
@@ -149,9 +150,9 @@ func TestClient_BindDevice(t *testing.T) {
 }
 
 func TestClient_DeleteDevice(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey)
+	client := NewClient(host, authPath, accessKey, secretKey, false)
 	req := new(structs.DeleteDeviceReq)
-	req.Mac = []string{"582D340000F8"}
+	req.Mac = []string{"582D3400692A"}
 	if err := client.DeleteDevice(context.Background(), req); err != nil {
 		log.Fatal(err)
 	}

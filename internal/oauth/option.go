@@ -6,4 +6,5 @@ const (
 
 const (
 	scopeDeviceManage = "device_full_access"
+	scopeAgentManage  = "agent"
 )

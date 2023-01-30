@@ -10,13 +10,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-func NewClient(apiHost, authPath, accessKey, secretKey string) *Client {
+func NewClient(apiHost, authPath, accessKey, secretKey string, useAgent bool) *Client {
 	client := new(Client)
 	client.host = apiHost
 	client.accessKey = accessKey
 	client.secretKey = secretKey
 
-	client.authClient = oauth.NewClient(authPath, accessKey, secretKey)
+	client.authClient = oauth.NewClient(authPath, accessKey, secretKey, useAgent)
 	return client
 }
 
@@ -111,7 +111,7 @@ func (c *Client) QueryDeviceList(ctx context.Context, req *structs.QueryDeviceLi
 		req = new(structs.QueryDeviceListReq)
 	}
 
-	if req.Limit != 0 {
+	if req.Limit != 0 || req.Offset != 0 {
 		return c.deviceList(ctx, req)
 	}
 

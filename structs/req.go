@@ -1,10 +1,11 @@
 package structs
 
 type QueryDeviceListReq struct {
-	Offset    uint  `query:"offset"`
-	Limit     uint  `query:"limit"`
-	Timestamp int64 `query:"timestamp"`
-	GroupId   int   `query:"group_id"`
+	Offset    uint   `query:"offset"`
+	Limit     uint   `query:"limit"`
+	Timestamp int64  `query:"timestamp"`
+	GroupId   int    `query:"group_id"`
+	Role      string `query:"role"` // 普通用户不需要传递，代理商使用
 }
 
 type QueryDeviceDataReq struct {

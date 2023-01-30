@@ -16,3 +16,7 @@ const (
 const (
 	errorMsg = "openapi"
 )
+
+const (
+	RoleAgent = "agent"
+)
