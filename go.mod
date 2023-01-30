@@ -1,6 +1,6 @@
 module github.com/ClearGrass/OpenapiSdkGo
 
-go 1.14
+go 1.16
 
 require (
 	github.com/guonaihong/gout v0.1.0
