@@ -14,7 +14,7 @@ func main() {
 	authPath := "authPath"
 	appId := "YouAppId"
 	appSecret := "YouAppSecret"
-	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
+	client := openapi.NewClient(apiHost, authPath, appId, appSecret, false) // 建议调用方将client设置为单例
 
 	// 设备列表
 	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{})
