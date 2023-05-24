@@ -16,6 +16,10 @@ type Client interface {
 	QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error)
 }
 
-func NewClient(apiHost, authPath, appId, appSecret string) Client {
-	return api.NewClient(apiHost, authPath, appId, appSecret)
+func NewClient(apiHost, authPath, appId, appSecret string, useAgent ...bool) Client {
+	agentUsed := false
+	if len(useAgent) > 0 {
+		agentUsed = useAgent[0]
+	}
+	return api.NewClient(apiHost, authPath, appId, appSecret, agentUsed)
 }

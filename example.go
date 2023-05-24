@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	apiHost := "apiHost"
-	authPath := "authPath"
+	apiHost := "https://apis.cleargrass.com"
+	authPath := "https://oauth.cleargrass.com/oauth2/token"
 	appId := "YouAppId"
 	appSecret := "YouAppSecret"
 	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
