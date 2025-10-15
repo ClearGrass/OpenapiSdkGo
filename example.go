@@ -15,7 +15,7 @@ func main() {
 	appId := "YouAppId"
 	appSecret := "YouAppSecret"
 	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
-
+	client.SetTimeout(20 * time.Second)
 	// 设备列表
 	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{})
 	if err != nil {

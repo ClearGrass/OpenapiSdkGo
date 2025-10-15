@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"context"
+	"time"
 
 	"github.com/ClearGrass/OpenapiSdkGo/internal/api"
 	"github.com/ClearGrass/OpenapiSdkGo/structs"
@@ -14,6 +15,7 @@ type Client interface {
 	QueryDeviceList(ctx context.Context, req *structs.QueryDeviceListReq) (*structs.DeviceList, error)
 	QueryDeviceData(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceDataListRes, error)
 	QueryDeviceEvent(ctx context.Context, req *structs.QueryDeviceDataReq) (*structs.DeviceEventListRes, error)
+	SetTimeout(timeout time.Duration)
 }
 
 func NewClient(apiHost, authPath, appId, appSecret string, useAgent ...bool) Client {

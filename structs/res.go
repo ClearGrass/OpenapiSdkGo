@@ -31,8 +31,11 @@ type DeviceData struct {
 	Pressure        *MetricData `json:"pressure,omitempty"`
 	Tvoc            *MetricData `json:"tvoc,omitempty"`
 	Co2             *MetricData `json:"co2,omitempty"`
+	Co2Percent      *MetricData `json:"co2_percent,omitempty"`
 	Pm25            *MetricData `json:"pm25,omitempty"`
 	Pm10            *MetricData `json:"pm10,omitempty"`
+	Noise           *MetricData `json:"noise,omitempty"`
+	TvocIndex       *MetricData `json:"tvoc_index,omitempty"`
 }
 
 type MetricData struct {
