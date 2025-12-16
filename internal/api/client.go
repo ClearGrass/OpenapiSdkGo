@@ -15,7 +15,7 @@ func NewClient(apiHost, authPath, accessKey, secretKey string, useAgent bool) *C
 	client.host = apiHost
 	client.accessKey = accessKey
 	client.secretKey = secretKey
-	client.timeout = 10 * time.Second
+	client.timeout = 20 * time.Second
 	client.authClient = oauth.NewClient(authPath, accessKey, secretKey, useAgent)
 	return client
 }

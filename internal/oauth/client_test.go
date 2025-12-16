@@ -7,8 +7,8 @@ import (
 
 var (
 	authPath  = "http://oauth.test.cleargrass.com/oauth2/token"
-	accessKey = "GhTBXTZGg"
-	secretKey = "f4cfd224b43d11ea8bf400163e2c48b3"
+	accessKey = "aa"
+	secretKey = "aaa"
 )
 
 func TestClient_GetToken(t *testing.T) {
