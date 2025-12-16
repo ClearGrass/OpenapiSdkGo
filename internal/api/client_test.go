@@ -3,23 +3,35 @@ package api
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ClearGrass/OpenapiSdkGo/structs"
 )
 
-var (
+/*var (
 	host      = "http://api.test.cleargrass.com:9181"
 	authPath  = "http://oauth.test.cleargrass.com/oauth2/token"
 	accessKey = "C0twUosnR"
 	secretKey = "024cdeb3b00711ec801f00163e3260ae"
+)*/
+
+var (
+	host      = "https://apis.cleargrass.com"
+	authPath  = "https://oauth.cleargrass.com/oauth2/token"
+	accessKey = "Xbub5shVR"
+	secretKey = "3629d65392f611eda1f80a4cc2897a69"
 )
 
 func TestClient_QueryDeviceList(t *testing.T) {
+	accessKey = "Xbub5shVR"
+	secretKey = "3629d65392f611eda1f80a4cc2897a69"
+
 	client := NewClient(host, authPath, accessKey, secretKey, false)
-	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 0, Offset: 0})
+	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{Limit: 10, Offset: 0})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,7 +41,7 @@ func TestClient_QueryDeviceList(t *testing.T) {
 
 	for _, device := range res.Devices {
 		if device.Info != nil {
-			fmt.Printf("%+v\t", device.Info)
+			fmt.Printf("%+v\t", device.Info.Product.Id)
 			fmt.Printf("%+v\t", device.Info.Status)
 			fmt.Printf("%+v\t", device.Info.Product.EnName)
 			fmt.Println()
@@ -42,15 +54,20 @@ func TestClient_QueryDeviceList(t *testing.T) {
 			fmt.Printf("%+v\t", device.Data.Humidity)
 			fmt.Printf("%+v\t", device.Data.Pressure)
 			fmt.Printf("%+v\t", device.Data.Battery)
+			fmt.Printf("noise: %+v\t", device.Data.Noise)
+			fmt.Printf("eTovc: %+v\t", device.Data.TvocIndex)
 			fmt.Println()
 		}
 	}
 }
 
 func TestClient_QueryDeviceData(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey, false)
+	accessKey = "ScvLUHxnR"
+	secretKey = "d1a4f8307d0f11ec986b00163e126199"
+
+	client := NewClient(host, authPath, accessKey, secretKey, true)
 	filter := new(structs.QueryDeviceDataReq)
-	filter.Mac = "5448E68F452B"
+	filter.Mac = "582D347028CF"
 	//filter.StartTime = time.Now().AddDate(0, 0, -1).Unix()
 	filter.StartTime = time.Now().Add(-2 * time.Hour).Unix()
 	//filter.Limit = 5
@@ -135,9 +152,15 @@ func TestClient_UpdateDeviceSettings(t *testing.T) {
 }
 
 func TestClient_BindDevice(t *testing.T) {
-	client := NewClient(host, authPath, accessKey, secretKey, true)
+	//accessKey = "GGnSFSkVg"
+	//secretKey = "e09c799d0f1c11ed8fcc00163e126199"
+
+	//accessKey = "Xbub5shVR"
+	//secretKey = "3629d65392f611eda1f80a4cc2897a69"
+
+	client := NewClient(host, authPath, accessKey, secretKey, false)
 	req := new(structs.BindDeviceReq)
-	req.DeviceToken = "123456"
+	req.DeviceToken = "8606"
 	req.ProductId = 1201
 	res, err := client.BindDevice(context.Background(), req)
 	if err != nil {
@@ -155,5 +178,32 @@ func TestClient_DeleteDevice(t *testing.T) {
 	req.Mac = []string{"582D3400692A"}
 	if err := client.DeleteDevice(context.Background(), req); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func TestClient_BindDeviceBatch(t *testing.T) {
+	accessKey := "GGnSFSkVg"
+	secretKey := "e09c799d0f1c11ed8fcc00163e126199"
+
+	content, _ := ioutil.ReadFile("mac.txt")
+	macList := strings.Split(string(content), "\r\n")
+
+	client := NewClient(host, authPath, accessKey, secretKey, true)
+	_ = client
+	for _, mac := range macList {
+		//fmt.Println(mac)
+		req := new(structs.BindDeviceReq)
+		req.DeviceToken = mac
+		req.ProductId = 1203
+
+		res, err := client.BindDevice(context.Background(), req)
+		if err != nil {
+			fmt.Println(mac)
+			log.Fatal(err)
+		}
+
+		fmt.Printf("%+v\t", res.Info.Mac)
+		fmt.Printf("%+v\t", res.Info.Version)
+		fmt.Printf("%+v\t", res.Info.Product)
 	}
 }
