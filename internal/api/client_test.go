@@ -15,8 +15,8 @@ import (
 var (
 	host      = "https://apis.cleargrass.com"
 	authPath  = "https://oauth.cleargrass.com/oauth2/token"
-	accessKey = "aa"
-	secretKey = "aaa"
+	accessKey = "4EK8W9MGR"
+	secretKey = "48a62565c1bf11eaafea00163e06ed69"
 )
 
 func TestClient_QueryDeviceList(t *testing.T) {
@@ -147,7 +147,7 @@ func TestClient_UpdateDeviceSettings(t *testing.T) {
 func TestClient_BindDevice(t *testing.T) {
 	client := NewClient(host, authPath, accessKey, secretKey, false)
 	req := new(structs.BindDeviceReq)
-	req.DeviceToken = "8606"
+	req.DeviceToken = "460558"
 	req.ProductId = 1201
 	res, err := client.BindDevice(context.Background(), req)
 	if err != nil {

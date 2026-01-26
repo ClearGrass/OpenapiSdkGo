@@ -1,8 +1,15 @@
-## 开放平台Golang Sdk
+## QingPing Openapi Go SDK
 
-### 获取软件包
+### Get the package
     go get github.com/ClearGrass/OpenapiSdkGo
    
-### 使用案例
-    参考example.go
- 
+### Use Cases
+    example.go
+
+### API List
+    - BindDevice
+    - DeleteDevice
+    - UpdateDeviceSettings
+    - QueryDeviceList
+    - QueryDeviceData
+    - QueryDeviceEvent

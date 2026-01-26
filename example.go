@@ -14,9 +14,9 @@ func main() {
 	authPath := "https://oauth.cleargrass.com/oauth2/token"
 	appId := "YouAppId"
 	appSecret := "YouAppSecret"
-	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // 建议调用方将client设置为单例
+	client := openapi.NewClient(apiHost, authPath, appId, appSecret) // It is recommended that the caller set the client as a singleton.
 	client.SetTimeout(20 * time.Second)
-	// 设备列表
+	// Query Device List
 	res, err := client.QueryDeviceList(context.Background(), &structs.QueryDeviceListReq{})
 	if err != nil {
 		panic(err)
@@ -27,7 +27,7 @@ func main() {
 		fmt.Printf("%+v\n", device.Data)
 	}
 
-	// 设备历史数据
+	// Query Device Data
 	if len(res.Devices) > 0 {
 		mac := res.Devices[0].Info.Mac
 		startTime := time.Now().AddDate(0, 0, -1).Unix()
@@ -35,13 +35,13 @@ func main() {
 		filter.Mac = mac
 		filter.StartTime = startTime // 开始时间
 
-		//filter.Timestamp = time.Now().UnixNano() / 1000000 // 默然当前毫秒级时间戳
-		//filter.EndTime = time.Now().Unix() // 结束时间 默认为当前时间
-		//filter.Limit = 100                 // 用于分页 最大值为100,不填获取该时间段全部数据
-		//filter.Offset = 0                  // 偏移量 用于分页查询 默认值0
+		//filter.Timestamp = time.Now().UnixNano() / 1000000 // The current millisecond-level timestamp is silent
+		//filter.EndTime = time.Now().Unix() // End time defaults to the current time.
+		//filter.Limit = 100                 // Used for pagination. Maximum value is 100. Leaving this field blank will retrieve all data for that time period.
+		//filter.Offset = 0                  // Offset used for paginated queries. Default value: 0
 		data, err := client.QueryDeviceData(context.Background(), filter)
 		if err != nil {
-			panic(err)
+			return
 		}
 		fmt.Println(data.Total)
 	}
