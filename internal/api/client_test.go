@@ -15,8 +15,8 @@ import (
 var (
 	host      = "https://apis.cleargrass.com"
 	authPath  = "https://oauth.cleargrass.com/oauth2/token"
-	accessKey = "4EK8W9MGR"
-	secretKey = "48a62565c1bf11eaafea00163e06ed69"
+	accessKey = "key"
+	secretKey = "secret"
 )
 
 func TestClient_QueryDeviceList(t *testing.T) {
