@@ -21,7 +21,12 @@ type UpdateDeviceSettingReq struct {
 	Mac             []string `json:"mac"`              // 设备mac地址
 	ReportInterval  int64    `json:"report_interval"`  // 秒
 	CollectInterval int64    `json:"collect_interval"` // 秒
+	ValveOpen       *int64   `json:"valve_open"`       // 开度
 	Timestamp       int64    `json:"timestamp"`        // 毫秒
+}
+
+func (r *UpdateDeviceSettingReq) SetValveOpen(valveOpen int64) {
+	r.ValveOpen = &valveOpen
 }
 
 type BindDeviceReq struct {
