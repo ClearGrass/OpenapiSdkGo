@@ -22,11 +22,16 @@ type UpdateDeviceSettingReq struct {
 	ReportInterval  int64    `json:"report_interval"`  // 秒
 	CollectInterval int64    `json:"collect_interval"` // 秒
 	ValveOpen       *int64   `json:"valve_open"`       // 开度
+	ValveCalib      *int64   `json:"valve_calib"`      // 阀门自检
 	Timestamp       int64    `json:"timestamp"`        // 毫秒
 }
 
 func (r *UpdateDeviceSettingReq) SetValveOpen(valveOpen int64) {
 	r.ValveOpen = &valveOpen
+}
+
+func (r *UpdateDeviceSettingReq) SetValveCalib(valveCalib int64) {
+	r.ValveCalib = &valveCalib
 }
 
 type BindDeviceReq struct {
